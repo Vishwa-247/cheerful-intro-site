@@ -12,7 +12,7 @@ import {
   FileText, 
   Target,
   Zap,
-  CheckCircle,
+  CheckCircle2,
   Clock,
   AlertCircle
 } from "lucide-react";
@@ -48,28 +48,47 @@ const AgentActivityPanel: React.FC<AgentActivityPanelProps> = ({ userId, current
       name: 'Course Generator',
       status: 'active',
       lastActivity: '2 minutes ago',
-      currentTask: 'Generating advanced React concepts',
-      completionRate: 75
+      currentTask: 'Enhancing React Performance section with mind maps',
+      completionRate: 85
     },
     {
       id: 'progress-analyst',
       name: 'Progress Analyst',
       status: 'processing',
-      lastActivity: '5 minutes ago',
-      currentTask: 'Analyzing learning patterns',
-      completionRate: 40
+      lastActivity: '30 seconds ago',
+      currentTask: 'Analyzing performance patterns in React optimization',
+      completionRate: 60
     },
     {
       id: 'chat-mentor',
       name: 'AI Mentor',
-      status: 'idle',
-      lastActivity: '1 hour ago'
+      status: 'active',
+      lastActivity: '1 minute ago',
+      currentTask: 'Providing contextual guidance on custom hooks',
+      completionRate: 95
     },
     {
       id: 'interview-coach',
       name: 'Interview Coach',
       status: 'idle',
-      lastActivity: '3 hours ago'
+      lastActivity: '15 minutes ago',
+      currentTask: 'Ready for mock interview session'
+    },
+    {
+      id: 'resume-analyzer',
+      name: 'Resume Analyzer',
+      status: 'processing',
+      lastActivity: '5 minutes ago',
+      currentTask: 'Analyzing skills gap for React expertise',
+      completionRate: 40
+    },
+    {
+      id: 'exam-prep',
+      name: 'Exam Prep Engine',
+      status: 'active',
+      lastActivity: '3 minutes ago',
+      currentTask: 'Generating adaptive quizzes for React patterns',
+      completionRate: 70
     }
   ]);
 
@@ -78,26 +97,53 @@ const AgentActivityPanel: React.FC<AgentActivityPanelProps> = ({ userId, current
       id: '1',
       agentId: 'progress-analyst',
       type: 'weakness_remediation',
-      title: 'Focus on Algorithm Optimization',
-      description: 'Your performance in algorithmic problems shows room for improvement',
+      title: 'Focus on Performance Optimization Patterns',
+      description: 'Your React.memo usage shows 68% accuracy. I\'ve generated targeted exercises to improve your optimization skills.',
       priority: 'high',
-      estimatedTime: '2-3 hours'
+      estimatedTime: '45 minutes'
     },
     {
       id: '2',
       agentId: 'course-generation',
       type: 'course_generation',
-      title: 'Advanced System Design Course',
-      description: 'Based on your progress, you\'re ready for system design concepts',
+      title: 'Advanced Testing Patterns Course Ready',
+      description: 'Based on identified gaps, I\'ve created a comprehensive testing course with React Testing Library examples.',
+      priority: 'high',
+      estimatedTime: '3-4 hours'
+    },
+    {
+      id: '3',
+      agentId: 'interview-coach',
+      type: 'skill_assessment',
+      title: 'Mock Technical Interview Available',
+      description: 'You\'re ready for a React-focused technical interview. I\'ll assess your current knowledge and provide feedback.',
       priority: 'medium',
-      estimatedTime: '4-6 hours'
+      estimatedTime: '60 minutes'
+    },
+    {
+      id: '4', 
+      agentId: 'exam-prep',
+      type: 'study_plan',
+      title: 'Adaptive Quiz: Custom Hooks Mastery',
+      description: 'Personalized quiz sequence to strengthen your custom hooks implementation skills.',
+      priority: 'medium',
+      estimatedTime: '20 minutes'
+    },
+    {
+      id: '5',
+      agentId: 'resume-analyzer',
+      type: 'skill_assessment',
+      title: 'Skills Gap Analysis Complete',
+      description: 'Found 3 key areas to highlight for senior React positions. Review recommendations for profile optimization.',
+      priority: 'low',
+      estimatedTime: '15 minutes'
     }
   ]);
 
   const getStatusIcon = (status: AgentStatus['status']) => {
     switch (status) {
       case 'active':
-        return <CheckCircle className="h-4 w-4 text-green-500" />;
+        return <CheckCircle2 className="h-4 w-4 text-green-500" />;
       case 'processing':
         return <Zap className="h-4 w-4 text-yellow-500 animate-pulse" />;
       case 'idle':
@@ -115,8 +161,12 @@ const AgentActivityPanel: React.FC<AgentActivityPanelProps> = ({ userId, current
         return <TrendingUp className="h-4 w-4" />;
       case 'chat-mentor':
         return <MessageSquare className="h-4 w-4" />;
-      case 'interview-coach':
-        return <Target className="h-4 w-4" />;
+      case 'exam-prep':
+        return <CheckCircle2 className="h-4 w-4" />;
+      case 'resume-analyzer':
+        return <FileText className="h-4 w-4" />;
+      case 'problem-solving':
+        return <Brain className="h-4 w-4" />;
       default:
         return <Bot className="h-4 w-4" />;
     }
@@ -263,21 +313,53 @@ const AgentActivityPanel: React.FC<AgentActivityPanelProps> = ({ userId, current
         </CardHeader>
         <CardContent>
           <div className="grid grid-cols-2 gap-3">
-            <Button variant="outline" className="h-auto p-3 flex-col gap-2">
+            <Button 
+              variant="outline" 
+              className="h-auto p-3 flex-col gap-2"
+              onClick={() => console.log('Generating new course...')}
+            >
               <FileText className="h-4 w-4" />
               <span className="text-sm">Generate Course</span>
             </Button>
-            <Button variant="outline" className="h-auto p-3 flex-col gap-2">
+            <Button 
+              variant="outline" 
+              className="h-auto p-3 flex-col gap-2"
+              onClick={() => console.log('Analyzing progress...')}
+            >
               <TrendingUp className="h-4 w-4" />
               <span className="text-sm">Analyze Progress</span>
             </Button>
-            <Button variant="outline" className="h-auto p-3 flex-col gap-2">
+            <Button 
+              variant="outline" 
+              className="h-auto p-3 flex-col gap-2"
+              onClick={() => console.log('Opening AI Mentor...')}
+            >
               <MessageSquare className="h-4 w-4" />
               <span className="text-sm">Ask AI Mentor</span>
             </Button>
-            <Button variant="outline" className="h-auto p-3 flex-col gap-2">
+            <Button 
+              variant="outline" 
+              className="h-auto p-3 flex-col gap-2"
+              onClick={() => console.log('Starting mock interview...')}
+            >
               <Target className="h-4 w-4" />
               <span className="text-sm">Mock Interview</span>
+            </Button>
+            <Button 
+              variant="outline" 
+              className="h-auto p-3 flex-col gap-2"
+              onClick={() => console.log('Analyzing resume...')}
+            >
+              <FileText className="h-4 w-4" />
+              <span className="text-sm">Resume Analysis</span>
+            </Button>
+            <Button 
+              variant="outline" 
+              className="h-auto p-3 flex-col gap-2"
+              onClick={() => console.log('Starting adaptive quiz...')}
+            >
+              <CheckCircle2 className="h-4 w-4" />
+              <span className="text-sm">Adaptive Quiz</span>
             </Button>
           </div>
         </CardContent>
