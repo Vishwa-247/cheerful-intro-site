@@ -64,67 +64,152 @@ def serialize_doc(doc):
     return doc
 
 async def generate_course_content_with_ai(topic: str, purpose: str, difficulty: str):
-    """Generate course content using Gemini AI"""
+    """Generate enhanced course content with mind maps and notebook features using Gemini AI"""
     
     prompt = f"""
-    You are an expert curriculum designer AI for StudyMate platform. Generate a comprehensive course on "{topic}" for {purpose} preparation at {difficulty} level.
+    You are an expert curriculum designer AI for StudyMate Agentic LMS platform. Generate a comprehensive course on "{topic}" for {purpose} preparation at {difficulty} level.
 
-    The output MUST be a single, valid JSON object. Do not include any text outside of the JSON.
+    The output MUST be a single, valid JSON object with structured learning aids. Do not include any text outside of the JSON.
 
-    Generate content using this JSON structure:
+    Generate content using this enhanced JSON structure:
     {{
         "topic": "{topic}",
         "summary": "A brief 2-3 sentence summary of what the course covers",
         "mainContent": {{
-            "introduction": "An engaging introduction to the topic",
+            "introduction": "An engaging introduction to the topic with real-world context",
             "sections": [
                 {{
                     "title": "Section title",
-                    "content": "Detailed explanation with examples and practical applications",
-                    "examples": ["Example 1", "Example 2"],
-                    "keyPoints": ["Key point 1", "Key point 2"]
+                    "content": "Detailed explanation with practical examples and applications",
+                    "examples": ["Real example 1 with code/scenario", "Real example 2 with implementation"],
+                    "keyPoints": ["Key insight 1", "Key insight 2"],
+                    "codeSnippets": [
+                        {{
+                            "language": "javascript|python|sql|etc",
+                            "code": "// Practical code example\nfunction example() {{ return 'working code'; }}",
+                            "explanation": "What this code demonstrates"
+                        }}
+                    ]
                 }}
             ]
         }},
         "chapters": [
             {{
                 "title": "Chapter 1 Title",
-                "content": "Comprehensive chapter content with explanations and examples",
+                "content": "Comprehensive chapter content with markdown formatting and examples",
                 "order_number": 1,
                 "duration_minutes": 30,
-                "learning_objectives": ["Objective 1", "Objective 2"]
+                "learning_objectives": ["Specific objective 1", "Specific objective 2"],
+                "mindMapSection": {{
+                    "name": "Chapter Topic",
+                    "children": [
+                        {{
+                            "name": "Key Concept 1",
+                            "children": [{{"name": "Detail 1.1"}}, {{"name": "Detail 1.2"}}]
+                        }}
+                    ]
+                }}
             }}
         ],
+        "notebook": {{
+            "keyConcepts": [
+                {{
+                    "term": "Technical Term 1",
+                    "definition": "Clear, concise definition with context",
+                    "importance": "Why this concept matters",
+                    "examples": ["Example usage 1", "Example usage 2"]
+                }},
+                {{
+                    "term": "Technical Term 2", 
+                    "definition": "Another important concept definition",
+                    "importance": "Practical significance",
+                    "examples": ["Real-world application"]
+                }}
+            ],
+            "analogies": [
+                {{
+                    "concept": "Complex technical concept",
+                    "analogy": "Simple real-world comparison that makes it easy to understand",
+                    "explanation": "How the analogy maps to the technical concept"
+                }}
+            ],
+            "practicalTips": [
+                "Actionable tip 1 for applying this knowledge",
+                "Best practice 2 for real-world use",
+                "Common pitfall to avoid"
+            ]
+        }},
         "flashcards": [
             {{
-                "question": "What is...?",
-                "answer": "Concise answer",
-                "difficulty": "{difficulty}"
+                "question": "What is the key difference between X and Y?",
+                "answer": "Concise but complete answer with context",
+                "difficulty": "{difficulty}",
+                "category": "concepts|implementation|theory|practice"
             }}
         ],
         "mcqs": [
             {{
-                "question": "Multiple choice question?",
-                "options": ["Option A", "Option B", "Option C", "Option D"],
-                "correct_answer": "Option A",
-                "explanation": "Why this answer is correct"
+                "question": "Which approach is best for solving X problem?",
+                "options": ["Detailed option A", "Detailed option B", "Detailed option C", "Detailed option D"],
+                "correct_answer": "Detailed option A",
+                "explanation": "Comprehensive explanation of why this is correct and others are wrong",
+                "difficulty": "{difficulty}"
             }}
         ],
         "qnas": [
             {{
-                "question": "Common question about the topic?",
-                "answer": "Detailed answer with examples"
+                "question": "How would you handle X situation in real-world projects?",
+                "answer": "Detailed practical answer with examples, considerations, and best practices"
             }}
         ],
         "mindMap": {{
             "root": {{
                 "name": "{topic}",
+                "type": "root",
                 "children": [
                     {{
-                        "name": "Main concept 1",
+                        "name": "Core Concepts",
+                        "type": "concept",
                         "children": [
-                            {{"name": "Sub-concept 1.1"}},
-                            {{"name": "Sub-concept 1.2"}}
+                            {{
+                                "name": "Fundamental Principle 1",
+                                "type": "principle",
+                                "children": [
+                                    {{"name": "Implementation Detail 1", "type": "detail"}},
+                                    {{"name": "Use Case 1", "type": "example"}}
+                                ]
+                            }},
+                            {{
+                                "name": "Fundamental Principle 2", 
+                                "type": "principle",
+                                "children": [
+                                    {{"name": "Implementation Detail 2", "type": "detail"}},
+                                    {{"name": "Use Case 2", "type": "example"}}
+                                ]
+                            }}
+                        ]
+                    }},
+                    {{
+                        "name": "Practical Applications",
+                        "type": "application",
+                        "children": [
+                            {{
+                                "name": "Real-world Scenario 1",
+                                "type": "scenario",
+                                "children": [
+                                    {{"name": "Solution Approach", "type": "solution"}},
+                                    {{"name": "Expected Outcome", "type": "outcome"}}
+                                ]
+                            }}
+                        ]
+                    }},
+                    {{
+                        "name": "Best Practices",
+                        "type": "best-practice",
+                        "children": [
+                            {{"name": "Performance Optimization", "type": "optimization"}},
+                            {{"name": "Common Pitfalls", "type": "warning"}},
+                            {{"name": "Testing Strategies", "type": "testing"}}
                         ]
                     }}
                 ]
@@ -132,20 +217,47 @@ async def generate_course_content_with_ai(topic: str, purpose: str, difficulty: 
         }},
         "resources": [
             {{
-                "title": "Resource title",
-                "type": "video|article|book|website",
-                "url": "https://example.com",
-                "description": "Brief description"
+                "title": "Official {topic} Documentation",
+                "type": "documentation",
+                "url": "https://docs.example.com",
+                "description": "Comprehensive official guide",
+                "difficulty": "{difficulty}"
+            }},
+            {{
+                "title": "Interactive {topic} Tutorial",
+                "type": "tutorial",
+                "url": "https://tutorial.example.com", 
+                "description": "Hands-on learning experience",
+                "difficulty": "{difficulty}"
             }}
-        ]
+        ],
+        "assessments": {{
+            "quizzes": [
+                {{
+                    "title": "Chapter 1 Quick Check",
+                    "questions": ["question_id_1", "question_id_2"],
+                    "estimated_minutes": 10
+                }}
+            ],
+            "projects": [
+                {{
+                    "title": "Build a {topic} Project",
+                    "description": "Apply what you've learned in a practical project",
+                    "requirements": ["Requirement 1", "Requirement 2"],
+                    "estimated_hours": 5
+                }}
+            ]
+        }}
     }}
 
     Ensure the content is:
     - Appropriate for {difficulty} level learners
-    - Focused on {purpose} preparation
-    - Practical and actionable
-    - Well-structured and comprehensive
-    - Include at least 3 chapters, 10 flashcards, 10 MCQs, and 5 Q&As
+    - Focused on {purpose} preparation  
+    - Includes rich mind map structure with different node types
+    - Contains practical analogies and key concepts for notebook-style learning
+    - Has actionable code examples and real-world applications
+    - Include at least 3 chapters, 15 flashcards, 15 MCQs, and 8 Q&As
+    - Mind map should have at least 3 main branches with 2-3 levels of depth
     """
 
     try:
@@ -169,85 +281,249 @@ async def generate_course_content_with_ai(topic: str, purpose: str, difficulty: 
         return generate_fallback_content(topic, purpose, difficulty)
 
 def generate_fallback_content(topic: str, purpose: str, difficulty: str):
-    """Generate fallback content when AI is not available"""
+    """Generate enhanced fallback content with mind maps and notebook features when AI is not available"""
     return {
         "topic": topic,
-        "summary": f"A comprehensive {difficulty} level course on {topic} designed for {purpose} preparation.",
+        "summary": f"A comprehensive {difficulty} level course on {topic} designed for {purpose} preparation with interactive mind maps and structured learning aids.",
         "mainContent": {
-            "introduction": f"Welcome to this {difficulty} level course on {topic}. This course is specifically designed to help you excel in {purpose}.",
+            "introduction": f"Welcome to this enhanced {difficulty} level course on {topic}. This course uses agentic AI to provide personalized learning with mind maps, key concepts, and practical applications specifically designed for {purpose}.",
             "sections": [
                 {
                     "title": f"Introduction to {topic}",
-                    "content": f"This section provides a foundational understanding of {topic} concepts and principles.",
-                    "examples": [f"Basic {topic} example", f"Real-world {topic} application"],
-                    "keyPoints": [f"Key concept 1 of {topic}", f"Key concept 2 of {topic}"]
+                    "content": f"This section provides a foundational understanding of {topic} concepts and principles with real-world context.",
+                    "examples": [f"Basic {topic} implementation example", f"Real-world {topic} use case"],
+                    "keyPoints": [f"Core principle 1 of {topic}", f"Essential concept 2 of {topic}"],
+                    "codeSnippets": [
+                        {
+                            "language": "javascript",
+                            "code": f"// Example {topic} implementation\nfunction example{topic.replace(' ', '')}() {{\n  return 'Working example';\n}}",
+                            "explanation": f"Basic {topic} implementation pattern"
+                        }
+                    ]
                 },
                 {
                     "title": f"Advanced {topic} Concepts",
-                    "content": f"Dive deeper into advanced {topic} topics and practical applications.",
-                    "examples": [f"Advanced {topic} example", f"Complex {topic} scenario"],
-                    "keyPoints": [f"Advanced concept 1", f"Advanced concept 2"]
+                    "content": f"Dive deeper into advanced {topic} topics with practical applications and best practices.",
+                    "examples": [f"Advanced {topic} pattern", f"Complex {topic} architecture"],
+                    "keyPoints": [f"Advanced pattern 1", f"Optimization technique 2"],
+                    "codeSnippets": [
+                        {
+                            "language": "javascript", 
+                            "code": f"// Advanced {topic} pattern\nclass Advanced{topic.replace(' ', '')} {{\n  constructor() {{\n    this.optimized = true;\n  }}\n}}",
+                            "explanation": f"Advanced {topic} implementation with optimization"
+                        }
+                    ]
                 }
             ]
         },
         "chapters": [
             {
                 "title": f"Fundamentals of {topic}",
-                "content": f"Learn the basic principles and concepts of {topic}. This chapter covers essential knowledge needed for {purpose}.",
+                "content": f"# Fundamentals of {topic}\n\nLearn the basic principles and concepts of {topic}. This chapter covers essential knowledge needed for {purpose}.\n\n## Key Learning Outcomes\n- Understand core {topic} concepts\n- Apply fundamental principles\n- Build foundation for advanced topics",
                 "order_number": 1,
                 "duration_minutes": 45,
-                "learning_objectives": [f"Understand basic {topic} concepts", f"Apply {topic} principles"]
+                "learning_objectives": [f"Understand basic {topic} concepts", f"Apply {topic} principles", "Build strong foundation"],
+                "mindMapSection": {
+                    "name": f"{topic} Fundamentals",
+                    "children": [
+                        {
+                            "name": "Core Concepts",
+                            "children": [{"name": "Concept 1"}, {"name": "Concept 2"}]
+                        },
+                        {
+                            "name": "Basic Implementation",
+                            "children": [{"name": "Setup"}, {"name": "Configuration"}]
+                        }
+                    ]
+                }
             },
             {
                 "title": f"Practical {topic} Applications",
-                "content": f"Explore real-world applications of {topic} with hands-on examples and case studies.",
+                "content": f"# Practical {topic} Applications\n\nExplore real-world applications of {topic} with hands-on examples and case studies.\n\n## What You'll Learn\n- Real-world implementation patterns\n- Best practices and common pitfalls\n- Industry-standard approaches",
                 "order_number": 2,
                 "duration_minutes": 60,
-                "learning_objectives": [f"Apply {topic} in practice", "Solve real-world problems"]
+                "learning_objectives": [f"Apply {topic} in practice", "Solve real-world problems", "Implement best practices"],
+                "mindMapSection": {
+                    "name": f"{topic} Applications",
+                    "children": [
+                        {
+                            "name": "Use Cases",
+                            "children": [{"name": "Enterprise"}, {"name": "Startups"}]
+                        },
+                        {
+                            "name": "Implementation",
+                            "children": [{"name": "Architecture"}, {"name": "Deployment"}]
+                        }
+                    ]
+                }
             },
             {
                 "title": f"Advanced {topic} Techniques",
-                "content": f"Master advanced {topic} techniques and best practices for {purpose} success.",
+                "content": f"# Advanced {topic} Techniques\n\nMaster advanced {topic} techniques and best practices for {purpose} success.\n\n## Advanced Topics Covered\n- Performance optimization strategies\n- Scalability considerations\n- Industry best practices",
                 "order_number": 3,
                 "duration_minutes": 75,
-                "learning_objectives": [f"Master advanced {topic}", "Optimize performance"]
+                "learning_objectives": [f"Master advanced {topic}", "Optimize performance", "Scale applications"],
+                "mindMapSection": {
+                    "name": f"Advanced {topic}",
+                    "children": [
+                        {
+                            "name": "Optimization",
+                            "children": [{"name": "Performance"}, {"name": "Memory"}]
+                        },
+                        {
+                            "name": "Scaling",
+                            "children": [{"name": "Horizontal"}, {"name": "Vertical"}]
+                        }
+                    ]
+                }
             }
         ],
+        "notebook": {
+            "keyConcepts": [
+                {
+                    "term": f"{topic} Architecture",
+                    "definition": f"The structural design and organization of {topic} systems",
+                    "importance": "Essential for building scalable and maintainable applications",
+                    "examples": [f"MVC in {topic}", f"Component-based {topic}"]
+                },
+                {
+                    "term": f"{topic} Best Practices",
+                    "definition": f"Industry-standard approaches for implementing {topic} effectively",
+                    "importance": "Ensures code quality, performance, and maintainability",
+                    "examples": ["Code organization patterns", "Testing strategies"]
+                },
+                {
+                    "term": f"{topic} Performance",
+                    "definition": f"Optimization techniques for {topic} applications",
+                    "importance": "Critical for user experience and scalability",
+                    "examples": ["Lazy loading", "Caching strategies"]
+                }
+            ],
+            "analogies": [
+                {
+                    "concept": f"{topic} Components",
+                    "analogy": "Like LEGO blocks - individual pieces that can be combined to build complex structures",
+                    "explanation": f"Just as LEGO blocks have standard connection points, {topic} components have well-defined interfaces that allow them to work together seamlessly"
+                },
+                {
+                    "concept": f"{topic} State Management",
+                    "analogy": "Like a library's card catalog system - keeping track of where everything is and its current status",
+                    "explanation": f"{topic} state management keeps track of data changes and ensures all parts of the application stay synchronized"
+                }
+            ],
+            "practicalTips": [
+                f"Start with small, focused {topic} projects to build understanding",
+                f"Always follow {topic} naming conventions for better code readability",
+                f"Use version control to track changes in your {topic} projects",
+                f"Test your {topic} code frequently to catch issues early",
+                f"Document your {topic} code for future reference and team collaboration"
+            ]
+        },
         "flashcards": [
-            {"question": f"What is {topic}?", "answer": f"{topic} is a fundamental concept in the field.", "difficulty": difficulty},
-            {"question": f"Why is {topic} important?", "answer": f"{topic} is important because it enables effective problem-solving.", "difficulty": difficulty},
-            {"question": f"How do you implement {topic}?", "answer": f"{topic} can be implemented through systematic approaches.", "difficulty": difficulty}
+            {"question": f"What is {topic}?", "answer": f"{topic} is a fundamental technology/concept used for building modern applications.", "difficulty": difficulty, "category": "concepts"},
+            {"question": f"Why is {topic} important?", "answer": f"{topic} is important because it enables scalable, maintainable, and efficient application development.", "difficulty": difficulty, "category": "theory"},
+            {"question": f"How do you implement {topic}?", "answer": f"{topic} can be implemented using structured approaches, following best practices and design patterns.", "difficulty": difficulty, "category": "implementation"},
+            {"question": f"What are the key benefits of {topic}?", "answer": f"Key benefits include improved code organization, better performance, enhanced maintainability, and scalability.", "difficulty": difficulty, "category": "concepts"},
+            {"question": f"What are common {topic} patterns?", "answer": f"Common patterns include component composition, state management, and modular architecture.", "difficulty": difficulty, "category": "practice"}
         ],
         "mcqs": [
             {
                 "question": f"What is the primary purpose of {topic}?",
-                "options": ["Option A", "Option B", "Option C", "Option D"],
-                "correct_answer": "Option A",
-                "explanation": "This is the correct answer because..."
+                "options": [
+                    f"To create efficient and scalable applications",
+                    f"To replace all existing technologies", 
+                    f"To make coding more complex",
+                    f"To slow down development"
+                ],
+                "correct_answer": f"To create efficient and scalable applications",
+                "explanation": f"The primary purpose of {topic} is to provide tools and patterns for building efficient, scalable, and maintainable applications.",
+                "difficulty": difficulty
+            },
+            {
+                "question": f"Which approach is best when starting with {topic}?",
+                "options": [
+                    "Jump directly into complex projects",
+                    "Start with small, focused projects",
+                    "Memorize all documentation first", 
+                    "Skip the fundamentals"
+                ],
+                "correct_answer": "Start with small, focused projects",
+                "explanation": "Starting with small, focused projects allows you to gradually build understanding and confidence before tackling more complex implementations.",
+                "difficulty": difficulty
             }
         ],
         "qnas": [
             {
                 "question": f"How can I get started with {topic}?",
-                "answer": f"To get started with {topic}, begin by understanding the fundamentals and practicing with simple examples."
+                "answer": f"To get started with {topic}, begin by understanding the core concepts, follow official documentation, practice with small projects, and gradually work on more complex applications. Join community forums and consider taking structured courses."
+            },
+            {
+                "question": f"What are the most common mistakes beginners make with {topic}?",
+                "answer": f"Common mistakes include not following best practices, trying to build complex applications too early, neglecting testing, poor code organization, and not understanding the underlying concepts before implementation."
+            },
+            {
+                "question": f"How do I debug {topic} applications effectively?",
+                "answer": f"Use developer tools, implement proper logging, write unit tests, use debugging techniques like breakpoints, and follow systematic approaches to isolate and fix issues."
             }
         ],
         "mindMap": {
             "root": {
                 "name": topic,
+                "type": "root",
                 "children": [
                     {
-                        "name": "Fundamentals",
+                        "name": "Core Concepts",
+                        "type": "concept",
                         "children": [
-                            {"name": "Basic Concepts"},
-                            {"name": "Core Principles"}
+                            {
+                                "name": "Fundamental Principles",
+                                "type": "principle",
+                                "children": [
+                                    {"name": "Component Architecture", "type": "detail"},
+                                    {"name": "Data Flow", "type": "detail"},
+                                    {"name": "State Management", "type": "detail"}
+                                ]
+                            },
+                            {
+                                "name": "Design Patterns",
+                                "type": "principle", 
+                                "children": [
+                                    {"name": "MVC Pattern", "type": "example"},
+                                    {"name": "Observer Pattern", "type": "example"}
+                                ]
+                            }
                         ]
                     },
                     {
-                        "name": "Applications",
+                        "name": "Practical Applications",
+                        "type": "application",
                         "children": [
-                            {"name": "Real-world Use Cases"},
-                            {"name": "Best Practices"}
+                            {
+                                "name": "Web Development",
+                                "type": "scenario",
+                                "children": [
+                                    {"name": "Frontend Applications", "type": "solution"},
+                                    {"name": "Progressive Web Apps", "type": "solution"}
+                                ]
+                            },
+                            {
+                                "name": "Mobile Development",
+                                "type": "scenario",
+                                "children": [
+                                    {"name": "Cross-platform Apps", "type": "solution"},
+                                    {"name": "Native Performance", "type": "outcome"}
+                                ]
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Best Practices",
+                        "type": "best-practice",
+                        "children": [
+                            {"name": "Performance Optimization", "type": "optimization"},
+                            {"name": "Security Considerations", "type": "warning"},
+                            {"name": "Testing Strategies", "type": "testing"},
+                            {"name": "Code Organization", "type": "optimization"}
                         ]
                     }
                 ]
@@ -256,11 +532,52 @@ def generate_fallback_content(topic: str, purpose: str, difficulty: str):
         "resources": [
             {
                 "title": f"Official {topic} Documentation",
-                "type": "website",
-                "url": "https://example.com",
-                "description": f"Comprehensive guide to {topic}"
+                "type": "documentation",
+                "url": "https://docs.example.com",
+                "description": f"Comprehensive official guide to {topic}",
+                "difficulty": difficulty
+            },
+            {
+                "title": f"Interactive {topic} Tutorial",
+                "type": "tutorial", 
+                "url": "https://tutorial.example.com",
+                "description": f"Hands-on learning experience with {topic}",
+                "difficulty": difficulty
+            },
+            {
+                "title": f"{topic} Community Forum",
+                "type": "community",
+                "url": "https://community.example.com",
+                "description": f"Connect with other {topic} developers",
+                "difficulty": difficulty
             }
-        ]
+        ],
+        "assessments": {
+            "quizzes": [
+                {
+                    "title": f"{topic} Fundamentals Quiz",
+                    "questions": ["q1", "q2", "q3"],
+                    "estimated_minutes": 15
+                },
+                {
+                    "title": f"Practical {topic} Quiz", 
+                    "questions": ["q4", "q5", "q6"],
+                    "estimated_minutes": 20
+                }
+            ],
+            "projects": [
+                {
+                    "title": f"Build a {topic} Application",
+                    "description": f"Create a practical application using {topic} concepts",
+                    "requirements": [
+                        f"Implement core {topic} features",
+                        f"Follow {topic} best practices",
+                        "Include proper documentation"
+                    ],
+                    "estimated_hours": 8
+                }
+            ]
+        }
     }
 
 @app.post("/generate", response_model=CourseGenerationResponse)

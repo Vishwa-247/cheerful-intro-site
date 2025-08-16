@@ -7,10 +7,11 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { BookOpen, FileText, Layout, Lightbulb, MessageSquare, ChevronLeft, CheckCircle2 } from "lucide-react";
+import { BookOpen, FileText, Layout, Lightbulb, MessageSquare, ChevronLeft, CheckCircle2, Brain, Bot } from "lucide-react";
 import Container from "@/components/ui/Container";
 import { useToast } from "@/hooks/use-toast";
 import { ChapterType, CourseType, FlashcardType, McqType, QnaType } from "@/types";
+import AgentActivityPanel from "@/components/course/AgentActivityPanel";
 
 const CourseDetail = () => {
   const { id } = useParams();
@@ -568,151 +569,163 @@ Implementing these optimization techniques will help you build React application
         )}
       </div>
       
-      <Tabs 
-        defaultValue="chapters" 
-        value={activeTab}
-        onValueChange={setActiveTab}
-        className="space-y-8"
-      >
-        <TabsList className="grid w-full grid-cols-4 max-w-2xl">
-          <TabsTrigger value="chapters" className="flex items-center">
-            <Layout className="h-4 w-4 mr-2" />
-            Chapters
-          </TabsTrigger>
-          <TabsTrigger value="flashcards" className="flex items-center">
-            <FileText className="h-4 w-4 mr-2" />
-            Flashcards
-          </TabsTrigger>
-          <TabsTrigger value="mcq" className="flex items-center">
-            <CheckCircle2 className="h-4 w-4 mr-2" />
-            Quizzes
-          </TabsTrigger>
-          <TabsTrigger value="qna" className="flex items-center">
-            <MessageSquare className="h-4 w-4 mr-2" />
-            Q&A
-          </TabsTrigger>
-        </TabsList>
-        
-        <TabsContent value="chapters" className="space-y-6">
-          <div className="grid grid-cols-1 gap-6">
-            {chapters.map((chapter) => (
-              <Card key={chapter.id}>
-                <CardHeader>
-                  <CardTitle className="flex items-start">
-                    <span className="text-muted-foreground mr-4">
-                      {String(chapter.order_number).padStart(2, '0')}
-                    </span>
-                    {chapter.title}
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="prose dark:prose-invert max-w-none">
-                    <div dangerouslySetInnerHTML={{ 
-                      __html: renderMarkdown(chapter.content)
-                     }} 
-                    />
-                  </div>
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="flashcards" className="space-y-6">
-          <div className="grid grid-cols-1 gap-6">
-            {flashcards.map((flashcard) => (
-              <Card key={flashcard.id} className="overflow-hidden">
-                <CardHeader className="pb-4">
-                  <CardTitle className="text-lg flex items-start">
-                    <Lightbulb className="h-5 w-5 mr-2 text-primary flex-shrink-0 mt-1" />
-                    <span>{flashcard.question}</span>
-                  </CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="mb-4">
-                    <Button
-                      variant={showAnswer[flashcard.id] ? "default" : "outline"}
-                      onClick={() => toggleAnswer(flashcard.id)}
-                      className="w-full"
-                    >
-                      {showAnswer[flashcard.id] ? "Hide Answer" : "Show Answer"}
-                    </Button>
-                  </div>
-                  
-                  {showAnswer[flashcard.id] && (
-                    <div className="p-4 rounded-md bg-muted/50 animate-in fade-in-50 duration-200">
-                      {flashcard.answer}
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            ))}
-          </div>
-        </TabsContent>
-        
-        <TabsContent value="mcq" className="space-y-6">
-          <div className="grid grid-cols-1 gap-6">
-            {mcqs.map((mcq) => (
-              <Card key={mcq.id}>
-                <CardHeader>
-                  <CardTitle className="text-lg">{mcq.question}</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <div className="space-y-3">
-                    {mcq.options.map((option, index) => (
-                      <div 
-                        key={index}
-                        className={`p-4 rounded-md border cursor-pointer transition-colors ${
-                          selectedAnswers[mcq.id] === option
-                            ? selectedAnswers[mcq.id] === mcq.correct_answer
-                              ? "bg-green-500/10 border-green-500/50 text-green-700 dark:text-green-300"
-                              : "bg-red-500/10 border-red-500/50 text-red-700 dark:text-red-300"
-                            : "hover:bg-muted"
-                        }`}
-                        onClick={() => handleSelectAnswer(mcq.id, option)}
-                      >
-                        <div className="flex items-center justify-between">
-                          <span>{option}</span>
-                          {selectedAnswers[mcq.id] === option && (
-                            selectedAnswers[mcq.id] === mcq.correct_answer ? (
-                              <CheckCircle2 className="h-5 w-5 text-green-500" />
-                            ) : (
-                              <span className="text-red-500 font-medium">✕</span>
-                            )
-                          )}
+        <div className="grid grid-cols-1 lg:grid-cols-4 gap-6">
+          {/* Main Course Content - 75% width */}
+          <div className="lg:col-span-3 space-y-6">
+            <Tabs 
+              defaultValue="chapters" 
+              value={activeTab}
+              onValueChange={setActiveTab}
+              className="space-y-8"
+            >
+              <TabsList className="grid w-full grid-cols-4 max-w-2xl">
+                <TabsTrigger value="chapters" className="flex items-center">
+                  <Layout className="h-4 w-4 mr-2" />
+                  Chapters
+                </TabsTrigger>
+                <TabsTrigger value="flashcards" className="flex items-center">
+                  <FileText className="h-4 w-4 mr-2" />
+                  Flashcards
+                </TabsTrigger>
+                <TabsTrigger value="mcq" className="flex items-center">
+                  <CheckCircle2 className="h-4 w-4 mr-2" />
+                  Quizzes
+                </TabsTrigger>
+                <TabsTrigger value="qna" className="flex items-center">
+                  <MessageSquare className="h-4 w-4 mr-2" />
+                  Q&A
+                </TabsTrigger>
+              </TabsList>
+              
+              {/* ... keep existing TabsContent sections ... */}
+              <TabsContent value="chapters" className="space-y-6">
+                <div className="grid grid-cols-1 gap-6">
+                  {chapters.map((chapter) => (
+                    <Card key={chapter.id}>
+                      <CardHeader>
+                        <CardTitle className="flex items-start">
+                          <span className="text-muted-foreground mr-4">
+                            {String(chapter.order_number).padStart(2, '0')}
+                          </span>
+                          {chapter.title}
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="prose dark:prose-invert max-w-none">
+                          <div dangerouslySetInnerHTML={{ 
+                            __html: renderMarkdown(chapter.content)
+                           }} 
+                          />
                         </div>
-                      </div>
-                    ))}
-                  </div>
-                  
-                  {selectedAnswers[mcq.id] && selectedAnswers[mcq.id] !== mcq.correct_answer && (
-                    <div className="mt-4 p-4 rounded-md bg-green-500/10 border border-green-500/30">
-                      <p className="font-medium text-green-700 dark:text-green-300">
-                        Correct answer: {mcq.correct_answer}
-                      </p>
-                    </div>
-                  )}
-                </CardContent>
-              </Card>
-            ))}
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </TabsContent>
+              
+              {/* Keep all other existing TabsContent sections... */}
+              <TabsContent value="flashcards" className="space-y-6">
+                <div className="grid grid-cols-1 gap-6">
+                  {flashcards.map((flashcard) => (
+                    <Card key={flashcard.id} className="overflow-hidden">
+                      <CardHeader className="pb-4">
+                        <CardTitle className="text-lg flex items-start">
+                          <Lightbulb className="h-5 w-5 mr-2 text-primary flex-shrink-0 mt-1" />
+                          <span>{flashcard.question}</span>
+                        </CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="mb-4">
+                          <Button
+                            variant={showAnswer[flashcard.id] ? "default" : "outline"}
+                            onClick={() => toggleAnswer(flashcard.id)}
+                            className="w-full"
+                          >
+                            {showAnswer[flashcard.id] ? "Hide Answer" : "Show Answer"}
+                          </Button>
+                        </div>
+                        
+                        {showAnswer[flashcard.id] && (
+                          <div className="p-4 rounded-md bg-muted/50 animate-in fade-in-50 duration-200">
+                            {flashcard.answer}
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="mcq" className="space-y-6">
+                <div className="grid grid-cols-1 gap-6">
+                  {mcqs.map((mcq) => (
+                    <Card key={mcq.id}>
+                      <CardHeader>
+                        <CardTitle className="text-lg">{mcq.question}</CardTitle>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="space-y-3">
+                          {mcq.options.map((option, index) => (
+                            <div 
+                              key={index}
+                              className={`p-4 rounded-md border cursor-pointer transition-colors ${
+                                selectedAnswers[mcq.id] === option
+                                  ? selectedAnswers[mcq.id] === mcq.correct_answer
+                                    ? "bg-green-500/10 border-green-500/50 text-green-700 dark:text-green-300"
+                                    : "bg-red-500/10 border-red-500/50 text-red-700 dark:text-red-300"
+                                  : "hover:bg-muted"
+                              }`}
+                              onClick={() => handleSelectAnswer(mcq.id, option)}
+                            >
+                              <div className="flex items-center justify-between">
+                                <span>{option}</span>
+                                {selectedAnswers[mcq.id] === option && (
+                                  selectedAnswers[mcq.id] === mcq.correct_answer ? (
+                                    <CheckCircle2 className="h-5 w-5 text-green-500" />
+                                  ) : (
+                                    <span className="text-red-500 font-medium">✕</span>
+                                  )
+                                )}
+                              </div>
+                            </div>
+                          ))}
+                        </div>
+                        
+                        {selectedAnswers[mcq.id] && selectedAnswers[mcq.id] !== mcq.correct_answer && (
+                          <div className="mt-4 p-4 rounded-md bg-green-500/10 border border-green-500/30">
+                            <p className="font-medium text-green-700 dark:text-green-300">
+                              Correct answer: {mcq.correct_answer}
+                            </p>
+                          </div>
+                        )}
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </TabsContent>
+              
+              <TabsContent value="qna" className="space-y-6">
+                <Accordion type="single" collapsible className="w-full">
+                  {qnas.map((qna) => (
+                    <AccordionItem key={qna.id} value={qna.id}>
+                      <AccordionTrigger className="text-left font-medium">
+                        {qna.question}
+                      </AccordionTrigger>
+                      <AccordionContent className="text-muted-foreground whitespace-pre-line">
+                        {qna.answer}
+                      </AccordionContent>
+                    </AccordionItem>
+                  ))}
+                </Accordion>
+              </TabsContent>
+            </Tabs>
           </div>
-        </TabsContent>
-        
-        <TabsContent value="qna" className="space-y-6">
-          <Accordion type="single" collapsible className="w-full">
-            {qnas.map((qna) => (
-              <AccordionItem key={qna.id} value={qna.id}>
-                <AccordionTrigger className="text-left font-medium">
-                  {qna.question}
-                </AccordionTrigger>
-                <AccordionContent className="text-muted-foreground whitespace-pre-line">
-                  {qna.answer}
-                </AccordionContent>
-              </AccordionItem>
-            ))}
-          </Accordion>
-        </TabsContent>
-      </Tabs>
+          
+          {/* AI Agent Sidebar - 25% width */}
+          <div className="lg:col-span-1">
+            <AgentActivityPanel userId="demo_user" currentCourseId={id} />
+          </div>
+        </div>
     </Container>
   );
 };
