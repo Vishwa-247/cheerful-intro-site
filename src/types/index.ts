@@ -17,6 +17,37 @@ export type CourseType = {
       flashcards?: any[];
       mcqs?: any[];
       qnas?: any[];
+      mindMap?: {
+        root: {
+          name: string;
+          type?: string;
+          children?: Array<{
+            name: string;
+            type?: string;
+            children?: any[];
+          }>;
+        };
+      };
+      notebook?: {
+        keyConcepts: Array<{
+          term: string;
+          definition: string;
+          importance?: string;
+          examples?: string[];
+        }>;
+        analogy?: string;
+        analogies?: Array<{
+          concept: string;
+          analogy: string;
+          explanation: string;
+        }>;
+        practicalTips?: string[];
+        codeSnippets?: Array<{
+          language: string;
+          code: string;
+          explanation: string;
+        }>;
+      };
     };
     [key: string]: any;
   };

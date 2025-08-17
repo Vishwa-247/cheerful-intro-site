@@ -7,11 +7,24 @@ import MindMap from './MindMap';
 interface KeyConcept {
   term: string;
   definition: string;
+  importance?: string;
+  examples?: string[];
 }
 
 interface NotebookData {
   keyConcepts: KeyConcept[];
-  analogy: string;
+  analogy?: string;
+  analogies?: Array<{
+    concept: string;
+    analogy: string;
+    explanation: string;
+  }>;
+  practicalTips?: string[];
+  codeSnippets?: Array<{
+    language: string;
+    code: string;
+    explanation: string;
+  }>;
 }
 
 interface MindMapData {
