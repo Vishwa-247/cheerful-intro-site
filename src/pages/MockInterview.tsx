@@ -10,6 +10,10 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import CourseForm from "@/components/course/CourseForm";
 import { useToast } from "@/hooks/use-toast";
 import { getInterviewData } from "@/data/mockInterviewData";
+import EmotionalAnalysisPanel from "@/components/interview/EmotionalAnalysisPanel";
+import AdaptiveQuestionEngine from "@/components/interview/AdaptiveQuestionEngine";
+import AgentActivityPanel from "@/components/course/AgentActivityPanel";
+import ProgressAnalytics from "@/components/course/ProgressAnalytics";
 
 const staticQuestions = {
   "Software Engineer": [
@@ -96,6 +100,84 @@ const MockInterview = () => {
   const [isRecording, setIsRecording] = useState(false);
   const [recordingComplete, setRecordingComplete] = useState(false);
   const [interviewId, setInterviewId] = useState<string>("mock-001");
+  
+  // Agentic AI Mock Data
+  const emotionalData = {
+    confidence: 78,
+    engagement: 85,
+    stress: 32,
+    clarity: 72,
+    overall_score: 77,
+    recommendations: [
+      "Maintain eye contact with the camera for better connection",
+      "Slow down slightly - you're speaking a bit fast",
+      "Use more specific examples in your answers",
+      "Great body language! Keep it up"
+    ]
+  };
+
+  const questionAnalytics = {
+    difficulty_adaptation: 65,
+    performance_trend: 'improving' as const,
+    suggested_topics: ['System Design', 'Problem Solving', 'Communication'],
+    next_question_preview: "Tell me about a time when you had to work with a difficult team member...",
+    ai_confidence: 92
+  };
+
+  const agentActivities = [
+    {
+      id: "interview-coach",
+      name: "Interview Coach AI",
+      status: "active" as const,
+      lastActivity: "Analyzing facial expressions and speech patterns",
+      progress: 78,
+      recommendations: ["Focus on maintaining steady eye contact", "Practice the STAR method for behavioral questions"]
+    },
+    {
+      id: "emotion-analyzer",
+      name: "Emotional Intelligence Analyzer",
+      status: "active" as const,
+      lastActivity: "Real-time confidence and stress level monitoring",
+      progress: 85,
+      recommendations: ["Great improvement in confidence over last 3 questions", "Consider deep breathing between answers"]
+    },
+    {
+      id: "adaptive-engine",
+      name: "Adaptive Question Engine",
+      status: "processing" as const,
+      lastActivity: "Adjusting question difficulty based on performance",
+      progress: 92,
+      recommendations: ["Next question will focus on technical depth", "Performance trend: Improving"]
+    },
+    {
+      id: "speech-analyzer",
+      name: "Speech Pattern Analyzer",
+      status: "active" as const,
+      lastActivity: "Monitoring pace, clarity, and filler words",
+      progress: 67,
+      recommendations: ["Reduce 'um' and 'uh' usage", "Excellent technical vocabulary"]
+    }
+  ];
+
+  const progressData = {
+    skillsGrowth: [
+      { skill: "Communication", current: 78, target: 90, improvement: 12 },
+      { skill: "Technical Knowledge", current: 85, target: 95, improvement: 8 },
+      { skill: "Problem Solving", current: 72, target: 85, improvement: 15 },
+      { skill: "Confidence", current: 80, target: 90, improvement: 18 }
+    ],
+    weeklyProgress: [
+      { week: "Week 1", interviews: 3, avgScore: 65 },
+      { week: "Week 2", interviews: 5, avgScore: 72 },
+      { week: "Week 3", interviews: 4, avgScore: 78 },
+      { week: "Week 4", interviews: 6, avgScore: 83 }
+    ],
+    achievements: [
+      { title: "First Perfect Answer", description: "Scored 100% on communication", date: "2 days ago", type: "milestone" as const },
+      { title: "Stress Management", description: "Maintained low stress levels", date: "1 week ago", type: "improvement" as const },
+      { title: "Technical Excellence", description: "Perfect technical accuracy", date: "3 days ago", type: "milestone" as const }
+    ]
+  };
 
   // Static mock interviews data
   const recentInterviews = [
@@ -252,8 +334,9 @@ const MockInterview = () => {
         }
         
         return (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Main Question Column */}
+            <div className="lg:col-span-2 space-y-6">
               <div className="mb-6 flex items-center justify-between">
                 <Button 
                   variant="ghost" 
@@ -274,7 +357,7 @@ const MockInterview = () => {
                 <CardHeader>
                   <CardTitle>Question {currentQuestionIndex + 1}</CardTitle>
                   <CardDescription>
-                    Take a moment to think about your answer before recording.
+                    AI is analyzing your performance and adapting the difficulty
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -293,47 +376,11 @@ const MockInterview = () => {
                 </Button>
               </div>
 
-              <Card className="mt-8">
-                <CardHeader>
-                  <CardTitle>Interview Tips</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2">
-                    <li className="flex items-start gap-2">
-                      <div className="rounded-full bg-primary/10 p-1 mt-0.5">
-                        <span className="block h-1.5 w-1.5 rounded-full bg-primary"></span>
-                      </div>
-                      <span>Speak clearly and at a moderate pace</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <div className="rounded-full bg-primary/10 p-1 mt-0.5">
-                        <span className="block h-1.5 w-1.5 rounded-full bg-primary"></span>
-                      </div>
-                      <span>Maintain eye contact with the camera</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <div className="rounded-full bg-primary/10 p-1 mt-0.5">
-                        <span className="block h-1.5 w-1.5 rounded-full bg-primary"></span>
-                      </div>
-                      <span>Structure your answers using the STAR method</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <div className="rounded-full bg-primary/10 p-1 mt-0.5">
-                        <span className="block h-1.5 w-1.5 rounded-full bg-primary"></span>
-                      </div>
-                      <span>Take a brief pause before answering to collect your thoughts</span>
-                    </li>
-                  </ul>
-                </CardContent>
-              </Card>
-            </div>
-            
-            <div className="space-y-6">
               <Card>
                 <CardHeader>
                   <CardTitle>Camera Preview</CardTitle>
                   <CardDescription>
-                    Check your camera and microphone before starting
+                    AI-powered analysis will start when you begin recording
                   </CardDescription>
                 </CardHeader>
                 <CardContent>
@@ -345,75 +392,42 @@ const MockInterview = () => {
                   />
                 </CardContent>
               </Card>
+            </div>
+            
+            {/* AI Analytics Sidebar */}
+            <div className="space-y-4">
+              <EmotionalAnalysisPanel 
+                data={emotionalData} 
+                isAnalyzing={false}
+              />
               
-              <Card>
-                <CardHeader>
-                  <CardTitle>Save Your Interview</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <p className="text-muted-foreground mb-4">
-                    Download your interview session for future reference or to share with mentors.
-                  </p>
-                  <Button 
-                    variant="outline" 
-                    className="w-full" 
-                    onClick={handleDownloadInterview}
-                  >
-                    <Download className="mr-2 h-4 w-4" />
-                    Download Interview
-                  </Button>
-                </CardContent>
-              </Card>
+              <AdaptiveQuestionEngine
+                analytics={questionAnalytics}
+                currentDifficulty="medium"
+                questionsAnswered={currentQuestionIndex}
+                totalQuestions={questions.length}
+              />
             </div>
           </div>
         );
       
       case InterviewStage.Recording:
         return (
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-8">
-            <div>
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            {/* Recording Column */}
+            <div className="lg:col-span-2 space-y-6">
               <div className="mb-6">
                 <h2 className="text-xl font-semibold mb-2">
-                  Question {currentQuestionIndex + 1}:
+                  Question {currentQuestionIndex + 1}: Live AI Analysis
                 </h2>
                 <div className="p-4 bg-muted rounded-md text-lg mb-4">
                   {questions[currentQuestionIndex]}
                 </div>
                 <p className="text-muted-foreground">
-                  When you're ready, click "Start Recording" and begin your answer. We'll analyze both your verbal response and facial expressions.
+                  AI is analyzing your facial expressions, speech patterns, and confidence level in real-time.
                 </p>
               </div>
               
-              <Card className="mt-8">
-                <CardHeader>
-                  <CardTitle>Answering Tips</CardTitle>
-                </CardHeader>
-                <CardContent>
-                  <ul className="space-y-2">
-                    <li className="flex items-start gap-2">
-                      <div className="rounded-full bg-primary/10 p-1 mt-0.5">
-                        <span className="block h-1.5 w-1.5 rounded-full bg-primary"></span>
-                      </div>
-                      <span>Use specific examples from your experience</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <div className="rounded-full bg-primary/10 p-1 mt-0.5">
-                        <span className="block h-1.5 w-1.5 rounded-full bg-primary"></span>
-                      </div>
-                      <span>Avoid filler words like "um" and "uh"</span>
-                    </li>
-                    <li className="flex items-start gap-2">
-                      <div className="rounded-full bg-primary/10 p-1 mt-0.5">
-                        <span className="block h-1.5 w-1.5 rounded-full bg-primary"></span>
-                      </div>
-                      <span>Speak confidently and maintain good posture</span>
-                    </li>
-                  </ul>
-                </CardContent>
-              </Card>
-            </div>
-            
-            <div className="space-y-6">
               <VideoRecorder 
                 onRecordingComplete={handleAnswerSubmitted}
                 isRecording={isRecording}
@@ -439,6 +453,33 @@ const MockInterview = () => {
                   </Button>
                 )}
               </div>
+
+              {/* Agent Activity Panel for Recording Stage */}
+              <AgentActivityPanel userId="mock-user" currentCourseId="interview-session" />
+            </div>
+            
+            {/* Live AI Analysis Sidebar */}
+            <div className="space-y-4">
+              <EmotionalAnalysisPanel 
+                data={emotionalData} 
+                isAnalyzing={isRecording}
+              />
+              
+              <ProgressAnalytics 
+                userId="mock-user" 
+                courseId="interview-session"
+                metrics={{
+                  overallScore: progressData.skillsGrowth.reduce((acc, skill) => acc + skill.current, 0) / progressData.skillsGrowth.length,
+                  weeklyProgress: 15,
+                  completedActivities: currentQuestionIndex + 1,
+                  totalActivities: questions.length,
+                  learningStreak: 7,
+                  timeSpent: 45,
+                  strengths: progressData.skillsGrowth.filter(s => s.current >= 80).map(s => s.skill),
+                  weaknesses: progressData.skillsGrowth.filter(s => s.current < 75).map(s => s.skill),
+                  recommendations: emotionalData.recommendations
+                }}
+              />
             </div>
           </div>
         );

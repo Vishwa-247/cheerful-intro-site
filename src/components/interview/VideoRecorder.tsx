@@ -91,7 +91,6 @@ const VideoRecorder = ({
         // Start facial analysis
         startAnalysis();
         mediaRecorderRef.current.start();
-        console.log("Recording started");
       } catch (err) {
         console.error("Error starting recording:", err);
         setError("Could not start recording. Please refresh and try again.");
@@ -101,7 +100,6 @@ const VideoRecorder = ({
         mediaRecorderRef.current.stop();
         // Stop facial analysis
         stopAnalysis();
-        console.log("Recording stopped");
       } catch (err) {
         console.error("Error stopping recording:", err);
       }
