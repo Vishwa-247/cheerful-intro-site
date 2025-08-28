@@ -7,7 +7,7 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
-import { BookOpen, FileText, Layout, Lightbulb, MessageSquare, ChevronLeft, CheckCircle2, Brain, Bot } from "lucide-react";
+import { BookOpen, FileText, Layout, Lightbulb, MessageSquare, ChevronLeft, CheckCircle2, Brain, Bot, Clock, Users, Award, ChevronRight, PlayCircle, CheckCircle, Circle } from "lucide-react";
 import Container from "@/components/ui/Container";
 import { useToast } from "@/hooks/use-toast";
 import { ChapterType, CourseType, FlashcardType, McqType, QnaType } from "@/types";
@@ -25,6 +25,7 @@ const CourseDetail = () => {
   const [mcqs, setMcqs] = useState<McqType[]>([]);
   const [qnas, setQnas] = useState<QnaType[]>([]);
   const [activeTab, setActiveTab] = useState("chapters");
+  const [selectedChapter, setSelectedChapter] = useState<string>("ch1");
   const [showAnswer, setShowAnswer] = useState<Record<string, boolean>>({});
   const [selectedAnswers, setSelectedAnswers] = useState<Record<string, string>>({});
 
@@ -675,27 +676,202 @@ Implementing these optimization techniques will help you build React application
               
               {/* Course Content Tabs */}
               <TabsContent value="chapters" className="space-y-6">
-                <div className="grid grid-cols-1 gap-6">
-                  {chapters.map((chapter) => (
-                    <Card key={chapter.id}>
-                      <CardHeader>
-                        <CardTitle className="flex items-start">
-                          <span className="text-muted-foreground mr-4">
-                            {String(chapter.order_number).padStart(2, '0')}
+                <div className="grid grid-cols-1 lg:grid-cols-4 gap-8 min-h-[600px]">
+                  {/* Chapter Navigation Sidebar */}
+                  <div className="lg:col-span-1 space-y-4">
+                    <div className="glass-card p-6">
+                      <div className="flex items-center gap-3 mb-6">
+                        <div className="p-2 rounded-lg bg-primary/10">
+                          <Layout className="h-5 w-5 text-primary" />
+                        </div>
+                        <div>
+                          <h3 className="font-semibold">Course Modules</h3>
+                          <p className="text-sm text-muted-foreground">{chapters.length} chapters</p>
+                        </div>
+                      </div>
+                      
+                      <div className="space-y-3">
+                        {chapters.map((chapter, index) => {
+                          const isActive = selectedChapter === chapter.id;
+                          const isCompleted = index < chapters.findIndex(ch => ch.id === selectedChapter);
+                          
+                          return (
+                            <button
+                              key={chapter.id}
+                              onClick={() => setSelectedChapter(chapter.id)}
+                              className={`w-full text-left p-4 rounded-xl border-2 transition-all duration-300 group ${
+                                isActive 
+                                  ? 'border-primary bg-primary/5 shadow-md' 
+                                  : 'border-border hover:border-primary/50 hover:bg-accent/30'
+                              }`}
+                            >
+                              <div className="flex items-center gap-3">
+                                <div className={`flex items-center justify-center w-8 h-8 rounded-full text-sm font-semibold transition-colors ${
+                                  isCompleted 
+                                    ? 'bg-green-500 text-white' 
+                                    : isActive 
+                                      ? 'bg-primary text-primary-foreground' 
+                                      : 'bg-muted text-muted-foreground group-hover:bg-primary/20 group-hover:text-primary'
+                                }`}>
+                                  {isCompleted ? (
+                                    <CheckCircle className="h-4 w-4" />
+                                  ) : (
+                                    String(chapter.order_number).padStart(2, '0')
+                                  )}
+                                </div>
+                                
+                                <div className="flex-1 min-w-0">
+                                  <h4 className={`font-medium text-sm leading-tight ${
+                                    isActive ? 'text-primary' : 'text-foreground'
+                                  }`}>
+                                    {chapter.title}
+                                  </h4>
+                                  <div className="flex items-center gap-2 mt-1">
+                                    <Clock className="h-3 w-3 text-muted-foreground" />
+                                    <span className="text-xs text-muted-foreground">15 min read</span>
+                                  </div>
+                                </div>
+                                
+                                {isActive && (
+                                  <ChevronRight className="h-4 w-4 text-primary" />
+                                )}
+                              </div>
+                            </button>
+                          );
+                        })}
+                      </div>
+                      
+                      {/* Progress Bar */}
+                      <div className="mt-6 pt-4 border-t">
+                        <div className="flex items-center justify-between mb-2">
+                          <span className="text-sm font-medium">Progress</span>
+                          <span className="text-sm text-muted-foreground">
+                            {Math.round((chapters.findIndex(ch => ch.id === selectedChapter) + 1) / chapters.length * 100)}%
                           </span>
-                          {chapter.title}
-                        </CardTitle>
-                      </CardHeader>
-                      <CardContent>
-                        <div className="prose dark:prose-invert max-w-none">
-                          <div dangerouslySetInnerHTML={{ 
-                            __html: renderMarkdown(chapter.content)
-                           }} 
+                        </div>
+                        <div className="w-full bg-muted rounded-full h-2">
+                          <div 
+                            className="bg-gradient-to-r from-primary to-accent h-2 rounded-full transition-all duration-500"
+                            style={{ width: `${(chapters.findIndex(ch => ch.id === selectedChapter) + 1) / chapters.length * 100}%` }}
                           />
                         </div>
-                      </CardContent>
-                    </Card>
-                  ))}
+                      </div>
+                    </div>
+                  </div>
+                  
+                  {/* Chapter Content Area */}
+                  <div className="lg:col-span-3">
+                    {chapters
+                      .filter(chapter => chapter.id === selectedChapter)
+                      .map((chapter) => (
+                        <div key={chapter.id} className="space-y-6">
+                          {/* Chapter Header */}
+                          <div className="glass-card p-8">
+                            <div className="flex items-start justify-between mb-6">
+                              <div className="flex-1">
+                                <div className="flex items-center gap-3 mb-4">
+                                  <Badge variant="secondary" className="px-3 py-1">
+                                    Chapter {String(chapter.order_number).padStart(2, '0')}
+                                  </Badge>
+                                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                                    <Clock className="h-4 w-4" />
+                                    15 min read
+                                  </div>
+                                  <div className="flex items-center gap-1 text-sm text-muted-foreground">
+                                    <Users className="h-4 w-4" />
+                                    Advanced
+                                  </div>
+                                </div>
+                                
+                                <h1 className="text-3xl font-bold tracking-tight mb-4 text-gradient">
+                                  {chapter.title}
+                                </h1>
+                                
+                                <p className="text-muted-foreground text-lg leading-relaxed">
+                                  Master the advanced concepts and patterns that will elevate your React development skills.
+                                </p>
+                              </div>
+                              
+                              <div className="flex items-center gap-3">
+                                <Button variant="outline" size="sm" className="gap-2">
+                                  <PlayCircle className="h-4 w-4" />
+                                  Watch Video
+                                </Button>
+                                <Button variant="outline" size="sm" className="gap-2">
+                                  <Award className="h-4 w-4" />
+                                  Practice
+                                </Button>
+                              </div>
+                            </div>
+                            
+                            {/* Learning Objectives */}
+                            <div className="bg-gradient-to-r from-primary/5 to-accent/5 rounded-xl p-6 border border-primary/10">
+                              <h3 className="font-semibold mb-3 flex items-center gap-2">
+                                <Brain className="h-5 w-5 text-primary" />
+                                What you'll learn
+                              </h3>
+                              <ul className="space-y-2">
+                                <li className="flex items-start gap-2">
+                                  <CheckCircle className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
+                                  <span className="text-sm">Advanced component composition patterns</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                  <CheckCircle className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
+                                  <span className="text-sm">Performance optimization techniques</span>
+                                </li>
+                                <li className="flex items-start gap-2">
+                                  <CheckCircle className="h-4 w-4 text-green-500 mt-0.5 flex-shrink-0" />
+                                  <span className="text-sm">Real-world implementation examples</span>
+                                </li>
+                              </ul>
+                            </div>
+                          </div>
+                          
+                          {/* Chapter Content */}
+                          <Card className="border-0 shadow-soft-xl">
+                            <CardContent className="p-8">
+                              <div className="prose prose-lg dark:prose-invert max-w-none prose-headings:text-gradient prose-code:bg-muted prose-code:px-2 prose-code:py-1 prose-code:rounded-md prose-pre:bg-card prose-pre:border">
+                                <div dangerouslySetInnerHTML={{ 
+                                  __html: renderMarkdown(chapter.content)
+                                }} />
+                              </div>
+                            </CardContent>
+                          </Card>
+                          
+                          {/* Chapter Navigation */}
+                          <div className="flex items-center justify-between pt-6">
+                            <Button 
+                              variant="outline" 
+                              className="gap-2"
+                              onClick={() => {
+                                const currentIndex = chapters.findIndex(ch => ch.id === selectedChapter);
+                                if (currentIndex > 0) {
+                                  setSelectedChapter(chapters[currentIndex - 1].id);
+                                }
+                              }}
+                              disabled={chapters.findIndex(ch => ch.id === selectedChapter) === 0}
+                            >
+                              <ChevronLeft className="h-4 w-4" />
+                              Previous Chapter
+                            </Button>
+                            
+                            <Button 
+                              className="gap-2 button-glow"
+                              onClick={() => {
+                                const currentIndex = chapters.findIndex(ch => ch.id === selectedChapter);
+                                if (currentIndex < chapters.length - 1) {
+                                  setSelectedChapter(chapters[currentIndex + 1].id);
+                                }
+                              }}
+                              disabled={chapters.findIndex(ch => ch.id === selectedChapter) === chapters.length - 1}
+                            >
+                              Next Chapter
+                              <ChevronRight className="h-4 w-4" />
+                            </Button>
+                          </div>
+                        </div>
+                    ))}
+                  </div>
                 </div>
               </TabsContent>
               
