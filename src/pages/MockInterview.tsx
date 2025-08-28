@@ -14,6 +14,7 @@ import EmotionalAnalysisPanel from "@/components/interview/EmotionalAnalysisPane
 import AdaptiveQuestionEngine from "@/components/interview/AdaptiveQuestionEngine";
 import AgentActivityPanel from "@/components/course/AgentActivityPanel";
 import ProgressAnalytics from "@/components/course/ProgressAnalytics";
+import AgentSelectionPanel from "@/components/interview/AgentSelectionPanel";
 
 const staticQuestions = {
   "Software Engineer": [
@@ -82,6 +83,7 @@ const staticQuestions = {
 };
 
 enum InterviewStage {
+  AgentSelection = "agent-selection",
   Setup = "setup",
   Questions = "questions",
   Recording = "recording",
@@ -92,7 +94,8 @@ const MockInterview = () => {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [isLoading, setIsLoading] = useState(false);
-  const [stage, setStage] = useState<InterviewStage>(InterviewStage.Setup);
+  const [stage, setStage] = useState<InterviewStage>(InterviewStage.AgentSelection);
+  const [selectedAgent, setSelectedAgent] = useState<string>("");
   const [questions, setQuestions] = useState<string[]>([]);
   const [currentQuestionIndex, setCurrentQuestionIndex] = useState(0);
   const [isCourseTabActive, setCourseTabActive] = useState(false);
@@ -217,6 +220,15 @@ const MockInterview = () => {
     }
   ];
 
+  const handleAgentSelection = (agentId: string) => {
+    setSelectedAgent(agentId);
+    toast({
+      title: "Agent Selected",
+      description: "Your AI agent has been configured for the interview.",
+    });
+    setStage(InterviewStage.Setup);
+  };
+
   const handleInterviewSetup = (role: string, techStack: string, experience: string) => {
     setIsLoading(true);
     
@@ -324,6 +336,40 @@ const MockInterview = () => {
 
   const renderStage = () => {
     switch (stage) {
+      case InterviewStage.AgentSelection:
+        return (
+          <div className="space-y-8">
+            <AgentSelectionPanel 
+              onAgentSelect={handleAgentSelection}
+              selectedAgent={selectedAgent}
+            />
+          </div>
+        );
+      
+      case InterviewStage.Setup:
+        return (
+          <div className="space-y-8">
+            <div className="mb-6 flex items-center justify-between">
+              <Button 
+                variant="ghost" 
+                size="sm" 
+                onClick={() => setStage(InterviewStage.AgentSelection)}
+                className="text-muted-foreground"
+              >
+                <ChevronLeft className="mr-2 h-4 w-4" />
+                Choose Different Agent
+              </Button>
+              {selectedAgent && (
+                <div className="text-sm text-muted-foreground">
+                  Using: <span className="font-medium text-foreground">{selectedAgent}</span>
+                </div>
+              )}
+            </div>
+            <InterviewSetup onSubmit={handleInterviewSetup} isLoading={isLoading} />
+            {renderRecentInterviews()}
+          </div>
+        );
+      
       case InterviewStage.Questions:
         if (questions.length === 0) {
           return (
@@ -616,16 +662,7 @@ const MockInterview = () => {
           </div>
         </div>
       ) : (
-        <>
-          {stage === InterviewStage.Setup && (
-            <div className="space-y-8">
-              <InterviewSetup onSubmit={handleInterviewSetup} isLoading={isLoading} />
-              {renderRecentInterviews()}
-            </div>
-          )}
-          
-          {stage !== InterviewStage.Setup && renderStage()}
-        </>
+        renderStage()
       )}
     </Container>
   );
