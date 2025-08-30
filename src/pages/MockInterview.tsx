@@ -587,84 +587,91 @@ const MockInterview = () => {
   };
 
   return (
-    <Container className="py-12">
-      <div className="mb-8 flex justify-between items-center">
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight mb-2">
-            {isCourseTabActive ? "Course Generator" : "Mock Interview"}
-          </h1>
-          <p className="text-muted-foreground max-w-2xl">
-            {isCourseTabActive 
-              ? "Create customized courses on any topic with our AI-powered course generator."
-              : "Practice your interview skills with our AI-powered mock interview simulator."}
-          </p>
-        </div>
-        <div className="flex gap-4">
-          <Button 
-            variant={isCourseTabActive ? "outline" : "default"} 
-            onClick={() => setCourseTabActive(false)}
-          >
-            Mock Interview
-          </Button>
-          <Button 
-            variant={isCourseTabActive ? "default" : "outline"} 
-            onClick={() => setCourseTabActive(true)}
-          >
-            Course Generator
-          </Button>
-        </div>
-      </div>
-
-      {isCourseTabActive ? (
-        <div className="space-y-8">
-          <CourseForm onSubmit={handleSubmitCourse} isLoading={isGeneratingCourse} />
-          
-          <div className="mt-12">
-            <h2 className="text-xl font-semibold mb-4">Recent Course Generations</h2>
-            <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-              {recentCourses.map((course, index) => (
-                <Card key={index} className="overflow-hidden">
-                  <CardHeader className="pb-4">
-                    <div className="flex justify-between items-start">
-                      <div>
-                        <CardTitle className="text-lg">{course.title}</CardTitle>
-                        <CardDescription>{course.date}</CardDescription>
-                      </div>
-                      <div className="px-2 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary">
-                        {course.purpose.replace('_', ' ')}
-                      </div>
-                    </div>
-                  </CardHeader>
-                  <CardContent>
-                    <div className="flex justify-between items-center mb-2">
-                      <span className="text-sm font-medium">{course.difficulty}</span>
-                      <span className="text-sm text-muted-foreground">{course.status}</span>
-                    </div>
-                    <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
-                      <div 
-                        className="h-full bg-primary" 
-                        style={{ width: `${course.progress}%` }}
-                      ></div>
-                    </div>
-                    <div className="mt-4">
-                      <Button 
-                        variant="outline" 
-                        className="w-full"
-                        onClick={() => navigate(`/course/${course.id}`)}
-                      >
-                        View Course
-                      </Button>
-                    </div>
-                  </CardContent>
-                </Card>
-              ))}
+    <div className="min-h-screen bg-background">
+      <Container className="py-8">
+        <div className="max-w-7xl mx-auto">
+          {/* Header */}
+          <div className="flex items-center justify-between mb-8">
+            <div>
+              <h1 className="text-3xl font-bold">
+                AI-Powered Mock Interview
+              </h1>
+              <p className="text-muted-foreground">
+                Practice with advanced AI agents and get instant feedback
+              </p>
+            </div>
+            
+            {/* Tab Switcher */}
+            <div className="flex bg-card rounded-lg border shadow-sm">
+              <Button
+                variant={!isCourseTabActive ? "default" : "ghost"}
+                onClick={() => setCourseTabActive(false)}
+                className="rounded-r-none"
+              >
+                Mock Interview
+              </Button>
+              <Button
+                variant={isCourseTabActive ? "default" : "ghost"}
+                onClick={() => setCourseTabActive(true)}
+                className="rounded-l-none"
+              >
+                Generate Course
+              </Button>
             </div>
           </div>
+
+          {isCourseTabActive ? (
+            <div className="space-y-8">
+              <CourseForm onSubmit={handleSubmitCourse} isLoading={isGeneratingCourse} />
+              
+              <div className="mt-12">
+                <h2 className="text-xl font-semibold mb-4">Recent Course Generations</h2>
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+                  {recentCourses.map((course, index) => (
+                    <Card key={index} className="overflow-hidden">
+                      <CardHeader className="pb-4">
+                        <div className="flex justify-between items-start">
+                          <div>
+                            <CardTitle className="text-lg">{course.title}</CardTitle>
+                            <CardDescription>{course.date}</CardDescription>
+                          </div>
+                          <div className="px-2 py-1 text-xs font-medium rounded-full bg-primary/10 text-primary">
+                            {course.purpose.replace('_', ' ')}
+                          </div>
+                        </div>
+                      </CardHeader>
+                      <CardContent>
+                        <div className="flex justify-between items-center mb-2">
+                          <span className="text-sm font-medium">{course.difficulty}</span>
+                          <span className="text-sm text-muted-foreground">{course.status}</span>
+                        </div>
+                        <div className="w-full h-2 bg-muted rounded-full overflow-hidden">
+                          <div 
+                            className="h-full bg-primary" 
+                            style={{ width: `${course.progress}%` }}
+                          ></div>
+                        </div>
+                        <div className="mt-4">
+                          <Button 
+                            variant="outline" 
+                            className="w-full"
+                            onClick={() => navigate(`/course/${course.id}`)}
+                          >
+                            View Course
+                          </Button>
+                        </div>
+                      </CardContent>
+                    </Card>
+                  ))}
+                </div>
+              </div>
+            </div>
+          ) : (
+            renderStage()
+          )}
         </div>
-      ) : (
-        renderStage()
-      )}
-    </Container>
+      </Container>
+    </div>
   );
 };
 

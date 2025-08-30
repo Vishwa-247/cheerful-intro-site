@@ -111,12 +111,12 @@ const AdaptiveQuestionEngine: React.FC<AdaptiveQuestionEngineProps> = ({
         </div>
 
         {/* Next Question Preview */}
-        <div className="space-y-2 p-3 bg-blue-50 rounded-lg">
+        <div className="space-y-2 p-3 bg-accent/10 rounded-lg">
           <div className="flex items-center gap-2">
-            <Zap className="h-4 w-4 text-blue-600" />
-            <span className="text-sm font-semibold text-blue-800">Next Question Preview</span>
+            <Zap className="h-4 w-4 text-accent-foreground" />
+            <span className="text-sm font-semibold text-accent-foreground">Next Question Preview</span>
           </div>
-          <p className="text-xs text-blue-700">
+          <p className="text-xs text-accent-foreground">
             "{analytics.next_question_preview}"
           </p>
         </div>

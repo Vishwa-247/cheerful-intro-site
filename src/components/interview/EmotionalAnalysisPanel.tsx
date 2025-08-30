@@ -91,9 +91,9 @@ const EmotionalAnalysisPanel: React.FC<EmotionalAnalysisPanelProps> = ({ data, i
           <h4 className="text-sm font-semibold">Live Recommendations</h4>
           <div className="space-y-2">
             {data.recommendations.map((rec, index) => (
-              <div key={index} className="flex items-start gap-2 p-2 bg-blue-50 rounded-md">
-                <Target className="h-3 w-3 text-blue-600 mt-0.5 flex-shrink-0" />
-                <span className="text-xs text-blue-800">{rec}</span>
+              <div key={index} className="flex items-start gap-2 p-2 bg-accent/10 rounded-md">
+                <Target className="h-3 w-3 text-accent-foreground mt-0.5 flex-shrink-0" />
+                <span className="text-xs text-accent-foreground">{rec}</span>
               </div>
             ))}
           </div>
